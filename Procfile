@@ -1,1 +1,1 @@
-web: gunicorn nav_jul_25:server
+web: gunicorn nav_oct_25:server
