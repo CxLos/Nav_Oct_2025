@@ -891,28 +891,17 @@ support_categories =[
     "Social Determinant of Health Referral"
 ]
 
-# Normalize support_categories (lowercase and stripped for consistency)
-# The code is creating a dictionary `normalized_categories` where the keys are the lowercase versions of the categories in the `support_categories` list, stripped of any leading or trailing whitespace, and the values are the original categories. This allows for easy lookup of categories in a case-insensitive manner.
-normalized_categories = {cat.lower().strip(): cat for cat in support_categories}
-
-# Counter to count matches
+# Counter to count all support types mentioned
 counter = Counter()
 
 for entry in df['Support']:
-    
-    # Split and clean each category
-    items = [i.strip().lower() for i in entry.split(",")]
+    # Split by comma and clean each item
+    items = [i.strip() for i in str(entry).split(",") if i.strip()]
     for item in items:
-        if item in normalized_categories:
-            counter[normalized_categories[item]] += 1
+        if item:  # Only count non-empty items
+            counter[item] += 1
 
-# Display the result
-# for category, count in counter.items():
-#     print(f"Support Counts: \n {category}: {count}")
-
-# # 'How can BMHC support you today?'
-# df_support = df['Support'].value_counts().reset_index(name='Count')
-
+# Create DataFrame from counter
 df_support = pd.DataFrame(counter.items(), columns=['Support', 'Count']).sort_values(by='Count', ascending=False)
 
 support_bar=px.bar(
@@ -1562,7 +1551,7 @@ zip_pie = px.pie(
 # m.save(map_file)
 # map_html = open(map_file, 'r').read()
 
-# # # ========================== DataFrame Table ========================== #
+# ========================== DataFrame Table ========================== #
 
 df = df.sort_values('Date of Activity', ascending=True)
 
@@ -1576,39 +1565,188 @@ df_indexed.insert(0, '#', df_indexed.index + 1)
 data = df_indexed.to_dict('records')
 columns = [{"name": col, "id": col} for col in df_indexed.columns]
 
-df_table = go.Figure(data=[go.Table(
-    header=dict(
-        values=list(df.columns),
-        fill_color='#34A853',
-        align='center',
-        height=30,
-        font=dict(size=16, color='white', family='Calibri') 
-    ),
-    cells=dict(
-        values=[df[col] for col in df.columns],
-        fill_color='lavender',
-        align='left',
-        height=25,
-        font=dict(size=12)
-    )
-)])
+# -------------------------------------------------- #
 
-df_table.update_layout(
-    autosize=False,
-    width=len(df.columns) * 200,   # total width = #columns × col width
-    height=900,
-    paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)',
-    shapes=[
-        dict(
-            type="rect",
-            xref="paper", yref="paper",
-            x0=0, y0=0, x1=1, y1=1,
-            line=dict(color="black", width=2),
-            fillcolor="rgba(0,0,0,0)"
-        )
-    ],
+# print("Locations: \n", df['Location'].unique().tolist())
+
+def create_location_dataframes_with_support_tables(df, location_list):
+    """
+    Creates filtered dataframes for each location and support type tables with split logic
+    
+    Parameters:
+    df: Main dataframe
+    location_list: List of location names to filter by
+    
+    Returns:
+    Dictionary with location dataframes, support tables, and all necessary variables for Dash
+    """
+    location_data = {}
+    location_dataframes = {}  # Store DataFrames separately
+    
+    for location in location_list:
+        # Create safe variable name
+        safe_name = location.lower().replace(" ", "_").replace("'", "").replace("-", "_")
+        
+        # Filter dataframe for this location
+        df_location = df[df['Location'] == location]
+        
+        # Store DataFrame separately
+        location_dataframes[safe_name] = df_location
+        
+        # Create support counts with SPLIT logic (like your September file)
+        counter = Counter()
+        
+        for entry in df_location['Support']:
+            # Split by comma and clean each item
+            items = [i.strip() for i in str(entry).split(",") if i.strip()]
+            for item in items:
+                if item:  # Only count non-empty items
+                    counter[item] += 1
+        
+        # Create DataFrame from counter
+        df_support = pd.DataFrame(counter.items(), columns=['Type of Support', 'Count']).sort_values(by='Count', ascending=False)
+        
+        # Create indexed version for the table
+        df_support_indexed = df_support.reset_index(drop=True).copy()
+        df_support_indexed.insert(0, '#', df_support_indexed.index + 1)
+        data_support = df_support_indexed.to_dict('records')
+        columns_support = [{"name": col, "id": col} for col in df_support_indexed.columns]
+        
+        # Calculate sum of support counts instead of dataframe length
+        support_count_sum = df_support['Count'].sum() if not df_support.empty else 0
+        
+        # Store only JSON-serializable data
+        location_data[safe_name] = {
+            'length': support_count_sum,  # Now this is the sum of support counts
+            'original_name': location,
+            'data_support': data_support,
+            'columns_support': columns_support
+        }
+    
+    return location_data, location_dataframes
+
+# The rest of your code remains the same, but now:
+# bmhc_len = sum of all support counts for Black Men's Health Clinic
+# downtown_cc_len = sum of all support counts for Downtown Austin Community Court
+# etc.
+
+# This means your table titles will now show:
+# "Black Men's Health Clinic Support Types (45)" - where 45 is the total count of all support types provided
+# instead of showing the number of different support types or number of client visits
+
+# Updated usage:
+location_unique = [
+    "Black Men's Health Clinic",
+    'Downtown Austin Community Court', 
+    'South Bridge',
+    'Sunrise Navigation Homeless Center', 
+    'Phone Call', 
+    'Community First Village'
+]
+
+# Get both the JSON-serializable data and the DataFrames
+location_results, location_dfs = create_location_dataframes_with_support_tables(df, location_unique)
+
+# Extract individual dataframes from the separate dictionary
+df_bmhc = location_dfs['black_mens_health_clinic']
+df_downtown_cc = location_dfs['downtown_austin_community_court']
+df_south_bridge = location_dfs['south_bridge']
+df_sunrise = location_dfs['sunrise_navigation_homeless_center']
+df_phone_call = location_dfs['phone_call']
+df_community_first = location_dfs['community_first_village']
+
+# Extract lengths for table titles
+bmhc_len = location_results['black_mens_health_clinic']['length']
+downtown_cc_len = location_results['downtown_austin_community_court']['length']
+south_bridge_len = location_results['south_bridge']['length']
+sunrise_len = location_results['sunrise_navigation_homeless_center']['length']
+phone_call_len = location_results['phone_call']['length']
+community_first_len = location_results['community_first_village']['length']
+
+# Extract support table data for Dash tables
+data_bmhc_support = location_results['black_mens_health_clinic']['data_support']
+columns_bmhc_support = location_results['black_mens_health_clinic']['columns_support']
+
+data_downtown_cc_support = location_results['downtown_austin_community_court']['data_support']
+columns_downtown_cc_support = location_results['downtown_austin_community_court']['columns_support']
+
+data_south_bridge_support = location_results['south_bridge']['data_support']
+columns_south_bridge_support = location_results['south_bridge']['columns_support']
+
+data_sunrise_support = location_results['sunrise_navigation_homeless_center']['data_support']
+columns_sunrise_support = location_results['sunrise_navigation_homeless_center']['columns_support']
+
+data_phone_call_support = location_results['phone_call']['data_support']
+columns_phone_call_support = location_results['phone_call']['columns_support']
+
+data_community_first_support = location_results['community_first_village']['data_support']
+columns_community_first_support = location_results['community_first_village']['columns_support']
+
+# ------------------------------------------------ #
+
+# Create location support summary table that groups by location
+df_location_support = (
+    df.groupby('Location')
+    .agg({
+        'Support': ['count', lambda x: ', '.join(sorted(set(x)))]  # Count and unique support types
+    })
+    .reset_index()
 )
+
+# Flatten the multi-level column names
+df_location_support.columns = ['Location', 'Count', 'Support Types']
+
+# Sort by count in descending order
+df_location_support = df_location_support.sort_values(by='Count', ascending=False)
+
+# Create indexed version for the table
+df_location_support_indexed = df_location_support.reset_index(drop=True).copy()
+df_location_support_indexed.insert(0, '#', df_location_support_indexed.index + 1)
+data_location_support = df_location_support_indexed.to_dict('records')
+columns_location_support = [{"name": col, "id": col} for col in df_location_support_indexed.columns]
+
+# Print verification
+for key, data in location_results.items():
+    print(f"{data['original_name']}: {data['length']} entries")
+
+# Print verification
+for key, data in location_results.items():
+    print(f"{data['original_name']}: {data['length']} entries")
+
+# Create location support summary table that groups by location
+df_location_support = (
+    df.groupby('Location')
+    .agg({
+        'Support': ['count', lambda x: ', '.join(sorted(set(x)))]  # Count and unique support types
+    })
+    .reset_index()
+)
+
+# Flatten the multi-level column names
+df_location_support.columns = ['Location', 'Count', 'Support Types']
+
+# Sort by count in descending order
+df_location_support = df_location_support.sort_values(by='Count', ascending=False)
+
+# Create indexed version for the table
+df_location_support_indexed = df_location_support.reset_index(drop=True).copy()
+df_location_support_indexed.insert(0, '#', df_location_support_indexed.index + 1)
+data_location_support = df_location_support_indexed.to_dict('records')
+columns_location_support = [{"name": col, "id": col} for col in df_location_support_indexed.columns]
+
+# ---------------------------------------------- #
+
+df_main = df.sort_values('Date of Activity', ascending=True)
+
+# create a display index column and prepare table data/columns
+# reset index to ensure contiguous numbering after any filtering/sorting upstream
+df_main_indexed = df_main.reset_index(drop=True).copy()
+# Insert '#' as the first column (1-based row numbers)
+df_main_indexed.insert(0, '#', df_main_indexed.index + 1)
+
+# Convert to records for DataTable
+data_main_navigation = df_main_indexed.to_dict('records')
+columns_main_navigation = [{"name": col, "id": col} for col in df_main_indexed.columns]
 
 # ============================== Dash Application ========================== #
 
@@ -2064,8 +2202,8 @@ html.Div(
             ),
             dash_table.DataTable(
                 id='applications-table',
-                data=data,
-                columns=columns,
+                data=data_main_navigation, 
+                columns=columns_main_navigation, 
                 page_size=10,
                 sort_action='native',
                 filter_action='native',
@@ -2104,6 +2242,331 @@ html.Div(
             ),
         ]
     ),
+    
+    # Black Men's Health Clinic Support Table
+    html.Div(
+        className='data-box',
+        children=[
+            html.H1(
+                className='data-title',
+                children=f"Black Men's Health Clinic Support Types ({bmhc_len})"
+            ),
+            dash_table.DataTable(
+                id='bmhc-support-table',
+                data=data_bmhc_support,
+                columns=columns_bmhc_support,
+                page_size=10,
+                sort_action='native',
+                filter_action='native',
+                row_selectable='multi',
+                style_table={
+                    'overflowX': 'auto',
+                },
+                style_cell={
+                    'textAlign': 'left',
+                    'minWidth': '100px', 
+                    'whiteSpace': 'normal'
+                },
+                style_header={
+                    'textAlign': 'center', 
+                    'fontWeight': 'bold',
+                    'backgroundColor': '#34A853', 
+                    'color': 'white'
+                },
+                style_data={
+                    'whiteSpace': 'normal',
+                    'height': 'auto',
+                },
+                style_cell_conditional=[
+                    {'if': {'column_id': '#'},
+                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                    {'if': {'column_id': 'Type of Support'},
+                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                    {'if': {'column_id': 'Count'},
+                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                ]
+            ),
+        ]
+    ),
+    
+    # Downtown Austin Community Court Support Table
+    html.Div(
+        className='data-box',
+        children=[
+            html.H1(
+                className='data-title',
+                children=f"Downtown Austin Community Court Support Types ({downtown_cc_len})"
+            ),
+            dash_table.DataTable(
+                id='downtown-cc-support-table',
+                data=data_downtown_cc_support,
+                columns=columns_downtown_cc_support,
+                page_size=10,
+                sort_action='native',
+                filter_action='native',
+                row_selectable='multi',
+                style_table={
+                    'overflowX': 'auto',
+                },
+                style_cell={
+                    'textAlign': 'left',
+                    'minWidth': '100px', 
+                    'whiteSpace': 'normal'
+                },
+                style_header={
+                    'textAlign': 'center', 
+                    'fontWeight': 'bold',
+                    'backgroundColor': '#34A853', 
+                    'color': 'white'
+                },
+                style_data={
+                    'whiteSpace': 'normal',
+                    'height': 'auto',
+                },
+                style_cell_conditional=[
+                    {'if': {'column_id': '#'},
+                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                    {'if': {'column_id': 'Type of Support'},
+                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                    {'if': {'column_id': 'Count'},
+                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                ]
+            ),
+        ]
+    ),
+    
+    # South Bridge Support Table
+    html.Div(
+        className='data-box',
+        children=[
+            html.H1(
+                className='data-title',
+                children=f"South Bridge Support Types ({south_bridge_len})"
+            ),
+            dash_table.DataTable(
+                id='south-bridge-support-table',
+                data=data_south_bridge_support,
+                columns=columns_south_bridge_support,
+                page_size=10,
+                sort_action='native',
+                filter_action='native',
+                row_selectable='multi',
+                style_table={
+                    'overflowX': 'auto',
+                },
+                style_cell={
+                    'textAlign': 'left',
+                    'minWidth': '100px', 
+                    'whiteSpace': 'normal'
+                },
+                style_header={
+                    'textAlign': 'center', 
+                    'fontWeight': 'bold',
+                    'backgroundColor': '#34A853', 
+                    'color': 'white'
+                },
+                style_data={
+                    'whiteSpace': 'normal',
+                    'height': 'auto',
+                },
+                style_cell_conditional=[
+                    {'if': {'column_id': '#'},
+                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                    {'if': {'column_id': 'Type of Support'},
+                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                    {'if': {'column_id': 'Count'},
+                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                ]
+            ),
+        ]
+    ),
+    
+    # Sunrise Navigation Homeless Center Support Table
+    html.Div(
+        className='data-box',
+        children=[
+            html.H1(
+                className='data-title',
+                children=f"Sunrise Navigation Homeless Center Support Types ({sunrise_len})"
+            ),
+            dash_table.DataTable(
+                id='sunrise-support-table',
+                data=data_sunrise_support,
+                columns=columns_sunrise_support,
+                page_size=10,
+                sort_action='native',
+                filter_action='native',
+                row_selectable='multi',
+                style_table={
+                    'overflowX': 'auto',
+                },
+                style_cell={
+                    'textAlign': 'left',
+                    'minWidth': '100px', 
+                    'whiteSpace': 'normal'
+                },
+                style_header={
+                    'textAlign': 'center', 
+                    'fontWeight': 'bold',
+                    'backgroundColor': '#34A853', 
+                    'color': 'white'
+                },
+                style_data={
+                    'whiteSpace': 'normal',
+                    'height': 'auto',
+                },
+                style_cell_conditional=[
+                    {'if': {'column_id': '#'},
+                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                    {'if': {'column_id': 'Type of Support'},
+                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                    {'if': {'column_id': 'Count'},
+                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                ]
+            ),
+        ]
+    ),
+    
+    # Phone Call Support Table
+    html.Div(
+        className='data-box',
+        children=[
+            html.H1(
+                className='data-title',
+                children=f"Phone Call Support Types ({phone_call_len})"
+            ),
+            dash_table.DataTable(
+                id='phone-call-support-table',
+                data=data_phone_call_support,
+                columns=columns_phone_call_support,
+                page_size=10,
+                sort_action='native',
+                filter_action='native',
+                row_selectable='multi',
+                style_table={
+                    'overflowX': 'auto',
+                },
+                style_cell={
+                    'textAlign': 'left',
+                    'minWidth': '100px', 
+                    'whiteSpace': 'normal'
+                },
+                style_header={
+                    'textAlign': 'center', 
+                    'fontWeight': 'bold',
+                    'backgroundColor': '#34A853', 
+                    'color': 'white'
+                },
+                style_data={
+                    'whiteSpace': 'normal',
+                    'height': 'auto',
+                },
+                style_cell_conditional=[
+                    {'if': {'column_id': '#'},
+                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                    {'if': {'column_id': 'Type of Support'},
+                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                    {'if': {'column_id': 'Count'},
+                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                ]
+            ),
+        ]
+    ),
+    
+    # Community First Village Support Table
+    html.Div(
+        className='data-box',
+        children=[
+            html.H1(
+                className='data-title',
+                children=f"Community First Village Support Types ({community_first_len})"
+            ),
+            dash_table.DataTable(
+                id='community-first-support-table',
+                data=data_community_first_support,
+                columns=columns_community_first_support,
+                page_size=10,
+                sort_action='native',
+                filter_action='native',
+                row_selectable='multi',
+                style_table={
+                    'overflowX': 'auto',
+                },
+                style_cell={
+                    'textAlign': 'left',
+                    'minWidth': '100px', 
+                    'whiteSpace': 'normal'
+                },
+                style_header={
+                    'textAlign': 'center', 
+                    'fontWeight': 'bold',
+                    'backgroundColor': '#34A853', 
+                    'color': 'white'
+                },
+                style_data={
+                    'whiteSpace': 'normal',
+                    'height': 'auto',
+                },
+                style_cell_conditional=[
+                    {'if': {'column_id': '#'},
+                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                    {'if': {'column_id': 'Type of Support'},
+                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                    {'if': {'column_id': 'Count'},
+                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                ]
+            ),
+        ]
+    ),
+    
+    # Location Support Summary Table
+    html.Div(
+        className='data-box',
+        children=[
+            html.H1(
+                className='data-title',
+                children='Location Support Summary'
+            ),
+            dash_table.DataTable(
+                id='location-support-table',
+                data=data_location_support,
+                columns=columns_location_support,
+                page_size=10,
+                sort_action='native',
+                filter_action='native',
+                row_selectable='multi',
+                style_table={
+                    'overflowX': 'auto',
+                },
+                style_cell={
+                    'textAlign': 'left',
+                    'minWidth': '100px', 
+                    'whiteSpace': 'normal'
+                },
+                style_header={
+                    'textAlign': 'center', 
+                    'fontWeight': 'bold',
+                    'backgroundColor': '#34A853', 
+                    'color': 'white'
+                },
+                style_data={
+                    'whiteSpace': 'normal',
+                    'height': 'auto',
+                },
+                style_cell_conditional=[
+                    {'if': {'column_id': '#'},
+                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                    {'if': {'column_id': 'Location'},
+                    'width': '200px', 'minWidth': '200px', 'maxWidth': '250px', 'textAlign': 'left'},
+                    {'if': {'column_id': 'Count'},
+                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                    {'if': {'column_id': 'Support Provided'},
+                    'width': '400px', 'minWidth': '400px', 'maxWidth': '600px', 'textAlign': 'left'},
+                ]
+            ),
+        ]
+    ),
+    
 ])
 
 print(f"Serving Flask app '{current_file}'! 🚀")
