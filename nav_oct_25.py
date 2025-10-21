@@ -2194,379 +2194,383 @@ html.Div(
 # ============================ Data Table ========================== #
 
     html.Div(
-        className='data-box',
+        className='data-row',
         children=[
-            html.H1(
-                className='data-title',
-                children='Navigation Table'
-            ),
-            dash_table.DataTable(
-                id='applications-table',
-                data=data_main_navigation, 
-                columns=columns_main_navigation, 
-                page_size=10,
-                sort_action='native',
-                filter_action='native',
-                row_selectable='multi',
-                style_table={
-                    'overflowX': 'auto',
-                    # 'border': '3px solid #000',
-                    # 'borderRadius': '0px'
-                },
-                style_cell={
-                    'textAlign': 'left',
-                    'minWidth': '100px', 
-                    'whiteSpace': 'normal'
-                },
-                style_header={
-                    'textAlign': 'center', 
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#34A853', 
-                    'color': 'white'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto',
-                },
-                style_cell_conditional=[
-                    # make the index column narrow and centered
-                    {'if': {'column_id': '#'},
-                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Timestamp'},
-                    'width': '50px', 'minWidth': '100px', 'maxWidth': '200px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Date of Activity'},
-                    'width': '160px', 'minWidth': '160px', 'maxWidth': '160px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Description'},
-                    'width': '200px', 'minWidth': '400px', 'maxWidth': '200px', 'textAlign': 'center'},
-                ]
-            ),
-        ]
-    ),
-    
-    # Black Men's Health Clinic Support Table
-    html.Div(
-        className='data-box',
-        children=[
-            html.H1(
-                className='data-title',
-                children=f"Black Men's Health Clinic Support Types ({bmhc_len})"
-            ),
-            dash_table.DataTable(
-                id='bmhc-support-table',
-                data=data_bmhc_support,
-                columns=columns_bmhc_support,
-                page_size=10,
-                sort_action='native',
-                filter_action='native',
-                row_selectable='multi',
-                style_table={
-                    'overflowX': 'auto',
-                },
-                style_cell={
-                    'textAlign': 'left',
-                    'minWidth': '100px', 
-                    'whiteSpace': 'normal'
-                },
-                style_header={
-                    'textAlign': 'center', 
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#34A853', 
-                    'color': 'white'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto',
-                },
-                style_cell_conditional=[
-                    {'if': {'column_id': '#'},
-                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Type of Support'},
-                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
-                    {'if': {'column_id': 'Count'},
-                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
-                ]
-            ),
-        ]
-    ),
-    
-    # Downtown Austin Community Court Support Table
-    html.Div(
-        className='data-box',
-        children=[
-            html.H1(
-                className='data-title',
-                children=f"Downtown Austin Community Court Support Types ({downtown_cc_len})"
-            ),
-            dash_table.DataTable(
-                id='downtown-cc-support-table',
-                data=data_downtown_cc_support,
-                columns=columns_downtown_cc_support,
-                page_size=10,
-                sort_action='native',
-                filter_action='native',
-                row_selectable='multi',
-                style_table={
-                    'overflowX': 'auto',
-                },
-                style_cell={
-                    'textAlign': 'left',
-                    'minWidth': '100px', 
-                    'whiteSpace': 'normal'
-                },
-                style_header={
-                    'textAlign': 'center', 
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#34A853', 
-                    'color': 'white'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto',
-                },
-                style_cell_conditional=[
-                    {'if': {'column_id': '#'},
-                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Type of Support'},
-                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
-                    {'if': {'column_id': 'Count'},
-                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
-                ]
-            ),
-        ]
-    ),
-    
-    # South Bridge Support Table
-    html.Div(
-        className='data-box',
-        children=[
-            html.H1(
-                className='data-title',
-                children=f"South Bridge Support Types ({south_bridge_len})"
-            ),
-            dash_table.DataTable(
-                id='south-bridge-support-table',
-                data=data_south_bridge_support,
-                columns=columns_south_bridge_support,
-                page_size=10,
-                sort_action='native',
-                filter_action='native',
-                row_selectable='multi',
-                style_table={
-                    'overflowX': 'auto',
-                },
-                style_cell={
-                    'textAlign': 'left',
-                    'minWidth': '100px', 
-                    'whiteSpace': 'normal'
-                },
-                style_header={
-                    'textAlign': 'center', 
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#34A853', 
-                    'color': 'white'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto',
-                },
-                style_cell_conditional=[
-                    {'if': {'column_id': '#'},
-                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Type of Support'},
-                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
-                    {'if': {'column_id': 'Count'},
-                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
-                ]
-            ),
-        ]
-    ),
-    
-    # Sunrise Navigation Homeless Center Support Table
-    html.Div(
-        className='data-box',
-        children=[
-            html.H1(
-                className='data-title',
-                children=f"Sunrise Navigation Homeless Center Support Types ({sunrise_len})"
-            ),
-            dash_table.DataTable(
-                id='sunrise-support-table',
-                data=data_sunrise_support,
-                columns=columns_sunrise_support,
-                page_size=10,
-                sort_action='native',
-                filter_action='native',
-                row_selectable='multi',
-                style_table={
-                    'overflowX': 'auto',
-                },
-                style_cell={
-                    'textAlign': 'left',
-                    'minWidth': '100px', 
-                    'whiteSpace': 'normal'
-                },
-                style_header={
-                    'textAlign': 'center', 
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#34A853', 
-                    'color': 'white'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto',
-                },
-                style_cell_conditional=[
-                    {'if': {'column_id': '#'},
-                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Type of Support'},
-                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
-                    {'if': {'column_id': 'Count'},
-                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
-                ]
-            ),
-        ]
-    ),
-    
-    # Phone Call Support Table
-    html.Div(
-        className='data-box',
-        children=[
-            html.H1(
-                className='data-title',
-                children=f"Phone Call Support Types ({phone_call_len})"
-            ),
-            dash_table.DataTable(
-                id='phone-call-support-table',
-                data=data_phone_call_support,
-                columns=columns_phone_call_support,
-                page_size=10,
-                sort_action='native',
-                filter_action='native',
-                row_selectable='multi',
-                style_table={
-                    'overflowX': 'auto',
-                },
-                style_cell={
-                    'textAlign': 'left',
-                    'minWidth': '100px', 
-                    'whiteSpace': 'normal'
-                },
-                style_header={
-                    'textAlign': 'center', 
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#34A853', 
-                    'color': 'white'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto',
-                },
-                style_cell_conditional=[
-                    {'if': {'column_id': '#'},
-                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Type of Support'},
-                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
-                    {'if': {'column_id': 'Count'},
-                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
-                ]
-            ),
-        ]
-    ),
-    
-    # Community First Village Support Table
-    html.Div(
-        className='data-box',
-        children=[
-            html.H1(
-                className='data-title',
-                children=f"Community First Village Support Types ({community_first_len})"
-            ),
-            dash_table.DataTable(
-                id='community-first-support-table',
-                data=data_community_first_support,
-                columns=columns_community_first_support,
-                page_size=10,
-                sort_action='native',
-                filter_action='native',
-                row_selectable='multi',
-                style_table={
-                    'overflowX': 'auto',
-                },
-                style_cell={
-                    'textAlign': 'left',
-                    'minWidth': '100px', 
-                    'whiteSpace': 'normal'
-                },
-                style_header={
-                    'textAlign': 'center', 
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#34A853', 
-                    'color': 'white'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto',
-                },
-                style_cell_conditional=[
-                    {'if': {'column_id': '#'},
-                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Type of Support'},
-                    'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
-                    {'if': {'column_id': 'Count'},
-                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
-                ]
-            ),
-        ]
-    ),
-    
-    # Location Support Summary Table
-    html.Div(
-        className='data-box',
-        children=[
-            html.H1(
-                className='data-title',
-                children='Location Support Summary'
-            ),
-            dash_table.DataTable(
-                id='location-support-table',
-                data=data_location_support,
-                columns=columns_location_support,
-                page_size=10,
-                sort_action='native',
-                filter_action='native',
-                row_selectable='multi',
-                style_table={
-                    'overflowX': 'auto',
-                },
-                style_cell={
-                    'textAlign': 'left',
-                    'minWidth': '100px', 
-                    'whiteSpace': 'normal'
-                },
-                style_header={
-                    'textAlign': 'center', 
-                    'fontWeight': 'bold',
-                    'backgroundColor': '#34A853', 
-                    'color': 'white'
-                },
-                style_data={
-                    'whiteSpace': 'normal',
-                    'height': 'auto',
-                },
-                style_cell_conditional=[
-                    {'if': {'column_id': '#'},
-                    'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Location'},
-                    'width': '200px', 'minWidth': '200px', 'maxWidth': '250px', 'textAlign': 'left'},
-                    {'if': {'column_id': 'Count'},
-                    'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
-                    {'if': {'column_id': 'Support Provided'},
-                    'width': '400px', 'minWidth': '400px', 'maxWidth': '600px', 'textAlign': 'left'},
-                ]
-            ),
-        ]
-    ),
-    
+                html.Div(
+                    className='data-box',
+                    children=[
+                        html.H1(
+                            className='data-title',
+                            children='Navigation Table'
+                        ),
+                        dash_table.DataTable(
+                            id='applications-table',
+                            data=data_main_navigation, 
+                            columns=columns_main_navigation, 
+                            page_size=10,
+                            sort_action='native',
+                            filter_action='native',
+                            row_selectable='multi',
+                            style_table={
+                                'overflowX': 'auto',
+                                # 'border': '3px solid #000',
+                                # 'borderRadius': '0px'
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'minWidth': '100px', 
+                                'whiteSpace': 'normal'
+                            },
+                            style_header={
+                                'textAlign': 'center', 
+                                'fontWeight': 'bold',
+                                'backgroundColor': '#34A853', 
+                                'color': 'white'
+                            },
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                # make the index column narrow and centered
+                                {'if': {'column_id': '#'},
+                                'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Timestamp'},
+                                'width': '50px', 'minWidth': '100px', 'maxWidth': '200px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Date of Activity'},
+                                'width': '160px', 'minWidth': '160px', 'maxWidth': '160px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Description'},
+                                'width': '200px', 'minWidth': '400px', 'maxWidth': '200px', 'textAlign': 'center'},
+                            ]
+                        ),
+                    ]
+                ),
+                
+                # Black Men's Health Clinic Support Table
+                html.Div(
+                    className='data-box',
+                    children=[
+                        html.H1(
+                            className='data-title',
+                            children=f"Black Men's Health Clinic Support Types ({bmhc_len})"
+                        ),
+                        dash_table.DataTable(
+                            id='bmhc-support-table',
+                            data=data_bmhc_support,
+                            columns=columns_bmhc_support,
+                            page_size=10,
+                            sort_action='native',
+                            filter_action='native',
+                            row_selectable='multi',
+                            style_table={
+                                'overflowX': 'auto',
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'minWidth': '100px', 
+                                'whiteSpace': 'normal'
+                            },
+                            style_header={
+                                'textAlign': 'center', 
+                                'fontWeight': 'bold',
+                                'backgroundColor': '#34A853', 
+                                'color': 'white'
+                            },
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': '#'},
+                                'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Type of Support'},
+                                'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                                {'if': {'column_id': 'Count'},
+                                'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                            ]
+                        ),
+                    ]
+                ),
+                
+                # Downtown Austin Community Court Support Table
+                html.Div(
+                    className='data-box',
+                    children=[
+                        html.H1(
+                            className='data-title',
+                            children=f"Downtown Austin Community Court Support Types ({downtown_cc_len})"
+                        ),
+                        dash_table.DataTable(
+                            id='downtown-cc-support-table',
+                            data=data_downtown_cc_support,
+                            columns=columns_downtown_cc_support,
+                            page_size=10,
+                            sort_action='native',
+                            filter_action='native',
+                            row_selectable='multi',
+                            style_table={
+                                'overflowX': 'auto',
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'minWidth': '100px', 
+                                'whiteSpace': 'normal'
+                            },
+                            style_header={
+                                'textAlign': 'center', 
+                                'fontWeight': 'bold',
+                                'backgroundColor': '#34A853', 
+                                'color': 'white'
+                            },
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': '#'},
+                                'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Type of Support'},
+                                'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                                {'if': {'column_id': 'Count'},
+                                'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                            ]
+                        ),
+                    ]
+                ),
+                
+                # South Bridge Support Table
+                html.Div(
+                    className='data-box',
+                    children=[
+                        html.H1(
+                            className='data-title',
+                            children=f"South Bridge Support Types ({south_bridge_len})"
+                        ),
+                        dash_table.DataTable(
+                            id='south-bridge-support-table',
+                            data=data_south_bridge_support,
+                            columns=columns_south_bridge_support,
+                            page_size=10,
+                            sort_action='native',
+                            filter_action='native',
+                            row_selectable='multi',
+                            style_table={
+                                'overflowX': 'auto',
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'minWidth': '100px', 
+                                'whiteSpace': 'normal'
+                            },
+                            style_header={
+                                'textAlign': 'center', 
+                                'fontWeight': 'bold',
+                                'backgroundColor': '#34A853', 
+                                'color': 'white'
+                            },
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': '#'},
+                                'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Type of Support'},
+                                'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                                {'if': {'column_id': 'Count'},
+                                'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                            ]
+                        ),
+                    ]
+                ),
+                
+                # Sunrise Navigation Homeless Center Support Table
+                html.Div(
+                    className='data-box',
+                    children=[
+                        html.H1(
+                            className='data-title',
+                            children=f"Sunrise Navigation Homeless Center Support Types ({sunrise_len})"
+                        ),
+                        dash_table.DataTable(
+                            id='sunrise-support-table',
+                            data=data_sunrise_support,
+                            columns=columns_sunrise_support,
+                            page_size=10,
+                            sort_action='native',
+                            filter_action='native',
+                            row_selectable='multi',
+                            style_table={
+                                'overflowX': 'auto',
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'minWidth': '100px', 
+                                'whiteSpace': 'normal'
+                            },
+                            style_header={
+                                'textAlign': 'center', 
+                                'fontWeight': 'bold',
+                                'backgroundColor': '#34A853', 
+                                'color': 'white'
+                            },
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': '#'},
+                                'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Type of Support'},
+                                'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                                {'if': {'column_id': 'Count'},
+                                'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                            ]
+                        ),
+                    ]
+                ),
+                
+                # Phone Call Support Table
+                html.Div(
+                    className='data-box',
+                    children=[
+                        html.H1(
+                            className='data-title',
+                            children=f"Phone Call Support Types ({phone_call_len})"
+                        ),
+                        dash_table.DataTable(
+                            id='phone-call-support-table',
+                            data=data_phone_call_support,
+                            columns=columns_phone_call_support,
+                            page_size=10,
+                            sort_action='native',
+                            filter_action='native',
+                            row_selectable='multi',
+                            style_table={
+                                'overflowX': 'auto',
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'minWidth': '100px', 
+                                'whiteSpace': 'normal'
+                            },
+                            style_header={
+                                'textAlign': 'center', 
+                                'fontWeight': 'bold',
+                                'backgroundColor': '#34A853', 
+                                'color': 'white'
+                            },
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': '#'},
+                                'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Type of Support'},
+                                'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                                {'if': {'column_id': 'Count'},
+                                'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                            ]
+                        ),
+                    ]
+                ),
+                
+                # Community First Village Support Table
+                html.Div(
+                    className='data-box',
+                    children=[
+                        html.H1(
+                            className='data-title',
+                            children=f"Community First Village Support Types ({community_first_len})"
+                        ),
+                        dash_table.DataTable(
+                            id='community-first-support-table',
+                            data=data_community_first_support,
+                            columns=columns_community_first_support,
+                            page_size=10,
+                            sort_action='native',
+                            filter_action='native',
+                            row_selectable='multi',
+                            style_table={
+                                'overflowX': 'auto',
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'minWidth': '100px', 
+                                'whiteSpace': 'normal'
+                            },
+                            style_header={
+                                'textAlign': 'center', 
+                                'fontWeight': 'bold',
+                                'backgroundColor': '#34A853', 
+                                'color': 'white'
+                            },
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': '#'},
+                                'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Type of Support'},
+                                'width': '300px', 'minWidth': '300px', 'maxWidth': '400px', 'textAlign': 'left'},
+                                {'if': {'column_id': 'Count'},
+                                'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                            ]
+                        ),
+                    ]
+                ),
+                
+                # Location Support Summary Table
+                html.Div(
+                    className='data-box',
+                    children=[
+                        html.H1(
+                            className='data-title',
+                            children='Location Support Summary'
+                        ),
+                        dash_table.DataTable(
+                            id='location-support-table',
+                            data=data_location_support,
+                            columns=columns_location_support,
+                            page_size=10,
+                            sort_action='native',
+                            filter_action='native',
+                            row_selectable='multi',
+                            style_table={
+                                'overflowX': 'auto',
+                            },
+                            style_cell={
+                                'textAlign': 'left',
+                                'minWidth': '100px', 
+                                'whiteSpace': 'normal'
+                            },
+                            style_header={
+                                'textAlign': 'center', 
+                                'fontWeight': 'bold',
+                                'backgroundColor': '#34A853', 
+                                'color': 'white'
+                            },
+                            style_data={
+                                'whiteSpace': 'normal',
+                                'height': 'auto',
+                            },
+                            style_cell_conditional=[
+                                {'if': {'column_id': '#'},
+                                'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Location'},
+                                'width': '200px', 'minWidth': '200px', 'maxWidth': '250px', 'textAlign': 'left'},
+                                {'if': {'column_id': 'Count'},
+                                'width': '100px', 'minWidth': '100px', 'maxWidth': '100px', 'textAlign': 'center'},
+                                {'if': {'column_id': 'Support Provided'},
+                                'width': '400px', 'minWidth': '400px', 'maxWidth': '600px', 'textAlign': 'left'},
+                            ]
+                        ),
+                    ]
+                ),
+            ]
+        ),
 ])
 
 print(f"Serving Flask app '{current_file}'! 🚀")
