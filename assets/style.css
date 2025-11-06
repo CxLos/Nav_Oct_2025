@@ -36,7 +36,7 @@ html, body {
   text-align: center;
   color: rgb(217, 191, 24);
   font-size: clamp(35px, 5.5vw, 55px);
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: Calibri, Arial, sans-serif;
 }
 
 .title2 {
@@ -483,9 +483,9 @@ html, body {
   margin: 0px 0px 0px 0px; /* Adjust the margin as needed */
   padding: 0px 0px 20px 0px; /* Reduced padding for tighter border */
   width: 90%;
-  /* height: 56vh; */
   height: auto;
   overflow-x: auto; 
+  border-bottom: 2px solid rgb(0, 0, 0);
   /* white-space: nowrap; */
   /* visibility:collapse; */
 }
