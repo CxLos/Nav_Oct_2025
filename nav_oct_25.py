@@ -2539,7 +2539,7 @@ html.Div(
                         children='Location Support Summary'
                     ),
                     dash_table.DataTable(
-                        id='applications-table2',
+                        id='applications-table',
                         data=data_location_support,
                         columns=columns_location_support,
                         page_size=10,
