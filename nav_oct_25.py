@@ -424,12 +424,12 @@ def random_date(start, end):
 start_date = datetime(1950, 1, 1) # Example: start date, e.g., 1950-01-01
 end_date = datetime(2000, 12, 31)
 
-def random_date(start, end):
-    return start + timedelta(days=np.random.randint(0, (end - start).days))
+# def random_date(start, end):
+#     return start + timedelta(days=np.random.randint(0, (end - start).days))
 
-# # Define the date range for random dates
-start_date = datetime(1950, 1, 1)
-end_date = datetime(2000, 12, 31)
+# # # Define the date range for random dates
+# start_date = datetime(1950, 1, 1)
+# end_date = datetime(2000, 12, 31)
 
 # # Convert 'Individual's Date of Birth:' to datetime, coercing errors to NaT
 df['Individual\'s Date of Birth:'] = pd.to_datetime(df['Individual\'s Date of Birth:'], errors='coerce')
@@ -2213,8 +2213,8 @@ html.Div(
                     ),
                     dash_table.DataTable(
                         id='applications-table',
-                        data=data_main_navigation, 
-                        columns=columns_main_navigation, 
+                        data=data_main_navigation, #type: ignore
+                        columns=columns_main_navigation, #type: ignore  
                         page_size=10,
                         sort_action='native',
                         filter_action='native',
@@ -2239,7 +2239,7 @@ html.Div(
                             'whiteSpace': 'normal',
                             'height': 'auto',
                         },
-                        style_cell_conditional=[
+                        style_cell_conditional=[ #type: ignore
                             # make the index column narrow and centered
                             {'if': {'column_id': '#'},
                             'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
@@ -2288,7 +2288,7 @@ html.Div(
                             'whiteSpace': 'normal',
                             'height': 'auto',
                         },
-                        style_cell_conditional=[
+                        style_cell_conditional=[ #type: ignore
                             {'if': {'column_id': '#'},
                             'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
                             {'if': {'column_id': 'Type of Support'},
@@ -2334,7 +2334,7 @@ html.Div(
                             'whiteSpace': 'normal',
                             'height': 'auto',
                         },
-                        style_cell_conditional=[
+                        style_cell_conditional=[ #type: ignore
                             {'if': {'column_id': '#'},
                             'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
                             {'if': {'column_id': 'Type of Support'},
@@ -2380,7 +2380,7 @@ html.Div(
                             'whiteSpace': 'normal',
                             'height': 'auto',
                         },
-                        style_cell_conditional=[
+                        style_cell_conditional=[ #type: ignore
                             {'if': {'column_id': '#'},
                             'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
                             {'if': {'column_id': 'Type of Support'},
@@ -2426,7 +2426,7 @@ html.Div(
                             'whiteSpace': 'normal',
                             'height': 'auto',
                         },
-                        style_cell_conditional=[
+                        style_cell_conditional=[ #type: ignore
                             {'if': {'column_id': '#'},
                             'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
                             {'if': {'column_id': 'Type of Support'},
@@ -2472,7 +2472,7 @@ html.Div(
                             'whiteSpace': 'normal',
                             'height': 'auto',
                         },
-                        style_cell_conditional=[
+                        style_cell_conditional=[ #type: ignore
                             {'if': {'column_id': '#'},
                             'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
                             {'if': {'column_id': 'Type of Support'},
@@ -2518,7 +2518,7 @@ html.Div(
                             'whiteSpace': 'normal',
                             'height': 'auto',
                         },
-                        style_cell_conditional=[
+                        style_cell_conditional=[ #type: ignore
                             {'if': {'column_id': '#'},
                             'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
                             {'if': {'column_id': 'Type of Support'},
@@ -2540,8 +2540,8 @@ html.Div(
                     ),
                     dash_table.DataTable(
                         id='applications-table',
-                        data=data_location_support,
-                        columns=columns_location_support,
+                        data=data_location_support,#type: ignore
+                        columns=columns_location_support, #type: ignore
                         page_size=10,
                         sort_action='native',
                         filter_action='native',
@@ -2564,7 +2564,7 @@ html.Div(
                             'whiteSpace': 'normal',
                             'height': 'auto',
                         },
-                        style_cell_conditional=[
+                        style_cell_conditional=[ #type: ignore
                             {'if': {'column_id': '#'},
                             'width': '20px', 'minWidth': '60px', 'maxWidth': '60px', 'textAlign': 'center'},
                             {'if': {'column_id': 'Location'},
@@ -2583,71 +2583,71 @@ html.Div(
 
 print(f"Serving Flask app '{current_file}'! 🚀")
 
-if __name__ == '__main__':
-    app.run(debug=
-                   True)
+# if __name__ == '__main__':
+#     app.run(debug=
+#                    True)
                 #    False)
                 
 # ----------------------------------------------- Updated Database --------------------------------------
 
-# updated_path = f'data/Navigation_{current_month}_{report_year}.xlsx'
-# data_path = os.path.join(script_dir, updated_path)
-# sheet_name=f'{current_month} {report_year}'
+updated_path = f'data/Navigation_{current_month}_{report_year}.xlsx'
+data_path = os.path.join(script_dir, updated_path)
+sheet_name=f'{current_month} {report_year}'
 
-# with pd.ExcelWriter(data_path, engine='xlsxwriter') as writer:
-#     df.to_excel(
-#             writer, 
-#             sheet_name=sheet_name, 
-#             startrow=1, 
-#             index=False
-#         )
+with pd.ExcelWriter(data_path, engine='xlsxwriter') as writer:
+    df.to_excel(
+            writer, 
+            sheet_name=sheet_name, 
+            startrow=1, 
+            index=False
+        )
 
-#     # Access the workbook and each worksheet
-#     workbook = writer.book
-#     sheet1 = writer.sheets[sheet_name]
+    # Access the workbook and each worksheet
+    workbook = writer.book
+    sheet1 = writer.sheets[sheet_name]
     
-#     # Define the header format
-#     header_format = workbook.add_format({
-#         'bold': True, 
-#         'font_size': 16, 
-#         'align': 'center', 
-#         'valign': 'vcenter',
-#         'border': 1, 
-#         'font_color': 'black', 
-#         'bg_color': '#B7B7B7',
-#     })
+    # Define the header format
+    header_format = workbook.add_format({
+        'bold': True, 
+        'font_size': 16, 
+        'align': 'center', 
+        'valign': 'vcenter',
+        'border': 1, 
+        'font_color': 'black', 
+        'bg_color': '#B7B7B7',
+    })
     
-#     # Set column A (Name) to be left-aligned, and B-E to be right-aligned
-#     left_align_format = workbook.add_format({
-#         'align': 'left',  # Left-align for column A
-#         'valign': 'vcenter',  # Vertically center
-#         'border': 0  # No border for individual cells
-#     })
+    # Set column A (Name) to be left-aligned, and B-E to be right-aligned
+    left_align_format = workbook.add_format({
+        'align': 'left',  # Left-align for column A
+        'valign': 'vcenter',  # Vertically center
+        'border': 0  # No border for individual cells
+    })
 
-#     right_align_format = workbook.add_format({
-#         'align': 'right',  # Right-align for columns B-E
-#         'valign': 'vcenter',  # Vertically center
-#         'border': 0  # No border for individual cells
-#     })
+    right_align_format = workbook.add_format({
+        'align': 'right',  # Right-align for columns B-E
+        'valign': 'vcenter',  # Vertically center
+        'border': 0  # No border for individual cells
+    })
     
-#     # Create border around the entire table
-#     border_format = workbook.add_format({
-#         'border': 1,  # Add border to all sides
-#         'border_color': 'black',  # Set border color to black
-#         'align': 'center',  # Center-align text
-#         'valign': 'vcenter',  # Vertically center text
-#         'font_size': 12,  # Set font size
-#         'font_color': 'black',  # Set font color to black
-#         'bg_color': '#FFFFFF'  # Set background color to white
-#     })
+    # Create border around the entire table
+    border_format = workbook.add_format({
+        'border': 1,  # Add border to all sides
+        'border_color': 'black',  # Set border color to black
+        'align': 'center',  # Center-align text
+        'valign': 'vcenter',  # Vertically center text
+        'font_size': 12,  # Set font size
+        'font_color': 'black',  # Set font color to black
+        'bg_color': '#FFFFFF'  # Set background color to white
+    })
 
-#     # Merge and format the first row (A1:E1) for each sheet
-#     sheet1.merge_range('A1:AB1', f'Client Navigation Report {current_month} {report_year}', header_format)
+    # Merge and format the first row (A1:E1) for each sheet
+    sheet1.merge_range('A1:AE1', f'Client Navigation Report {current_month} {report_year}', header_format)
 
-#     # Set column alignment and width
-#     # sheet1.set_column('A:A', 20, left_align_format)  
+    # Set column alignment and width
+    # sheet1.set_column('A:A', 20, left_align_format)  
 
-#     print(f"Navigation Excel file saved to {data_path}")
+    print(f"Navigation Excel file saved to {data_path}")
 
 # -------------------------------------------- KILL PORT ---------------------------------------------------
 
