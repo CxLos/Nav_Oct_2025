@@ -147,7 +147,7 @@ df.rename(
         "Location Encountered:" : "Location",
         "Individual's Insurance Status:" : "Insurance",
         "Individual's Status:" : "Status",
-        "Type of Support Given:" : "Support",
+        "Type of Coordination/Navigation Provided:" : "Support",
         "Gender:" : "Gender",
         "Race / Ethnicity:" : "Ethnicity",
         "Provide brief support description:" : "Description",
@@ -917,7 +917,7 @@ for entry in df['Support']:
 # Create DataFrame from counter
 df_support = pd.DataFrame(counter.items(), columns=['Support', 'Count']).sort_values(by='Count', ascending=False)
 
-print("Support Value counts After Split: \n", df_support)
+# print("Support Value counts After Split: \n", df_support)
 
 support_bar=px.bar(
     df_support,
