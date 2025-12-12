@@ -155,6 +155,17 @@ df.rename(
     }, 
 inplace=True)
 
+# Search for all duplicates in dataset:
+duplicates = df[df.duplicated(keep=False)]
+# print("Duplicate entries in dataset:\n", duplicates)
+
+# Find duplicate rows where both first and last names match:
+duplicate_rows = df[df.duplicated(subset=["Individual's First Name:", "Individual's Last Name:"], keep=False)][["Individual's First Name:", "Individual's Last Name:", 'Date of Activity']].sort_values(["Individual's Last Name:", "Individual's First Name:"])
+# print("Duplicate name entries:\n", duplicate_rows)
+
+# Show duplicate names with their counts
+duplicate_counts = df[df.duplicated(subset=["Individual's First Name:", "Individual's Last Name:"], keep=False)].groupby(["Individual's First Name:", "Individual's Last Name:"]).size().reset_index(name='Count').sort_values('Count', ascending=False)
+print("Duplicate name counts:\n", duplicate_counts)
 
 # ------------------------------- Clients Serviced ---------------------------- #
 
